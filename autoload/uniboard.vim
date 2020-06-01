@@ -8,10 +8,15 @@ function! uniboard#IsRunning()
 endfunction!
 
 function! uniboard#Yank()
+  " Only yank to uniboard if no custom register specified
+  if v:register != '"'
+    return
+  endif
+
   if !uniboard#IsRunning()
     let daemon_command = 'nohup '.s:uniboard_command.' daemon&'
     call system(daemon_command)
-  end
+  endif
 
   call system(s:uniboard_command.'put '.shellescape(@").'')
 endfunction!
@@ -22,7 +27,7 @@ function! uniboard#Paste(key)
     let @" = value
   endif
 
-  silent exe "normal! ".a:key
+  silent exe 'normal! "'.v:register.a:key
 endfunction!
 
 function! uniboard#StopDaemon()
