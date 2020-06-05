@@ -1,6 +1,10 @@
 let s:script_directory = expand('<sfile>:p:h')
 let s:py_file = s:script_directory.'/uniboard.py'
-let s:uniboard_command = 'python3 '.s:py_file.' '
+let s:python3 = 'python3'
+if exists('g:python3_host_prog')
+  let s:python3 = g:python3_host_prog
+endif
+let s:uniboard_command = s:python3.' '.s:py_file.' '
 
 function! uniboard#IsRunning()
   call system(s:uniboard_command.'ping')
