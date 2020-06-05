@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import os
 import socket
 import sys
@@ -73,20 +74,25 @@ def uniboard_ping():
         sys.exit(1)
 
 def main():
-    if len(sys.argv) <= 1:
-        pass
+    parser = argparse.ArgumentParser(description='A minimalistic clipboard server')
+    parser.add_argument('--daemon', action='store_true',
+                        help='Run clipboard daemon')
+    parser.add_argument('--put', metavar="VALUE",
+                        help='Sets the clipboard value')
+    parser.add_argument('--get', action='store_true',
+                        help='Returns and clears the clipboard value')
+    parser.add_argument('--ping', action='store_true',
+                        help='Returns pid of currently running daemon')
+    args = parser.parse_args()
 
-    command = sys.argv[1]
-    if command == "daemon":
+    if args.daemon:
         start_daemon()
-    elif command == "put":
-        uniboard_put(sys.argv[2])
-    elif command == "get":
+    elif args.put:
+        uniboard_put(args.put)
+    elif args.get:
         uniboard_get()
-    elif command == "ping":
+    elif args.ping:
         uniboard_ping()
-    elif command in ["help", "-h", "--help"]:
-        pass
 
 if __name__ == "__main__":
     main()
