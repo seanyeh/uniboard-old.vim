@@ -35,9 +35,5 @@ function! uniboard#Paste(key)
 endfunction!
 
 function! uniboard#StopDaemon()
-  let pid = system(s:uniboard_command.'--ping')
-
-  if !v:shell_error
-    call system('kill -15 '.pid)
-  endif
+  call system(s:uniboard_command.'--stop')
 endfunction!

@@ -41,6 +41,9 @@ def start_daemon():
                 connection.sendall(str(os.getpid()).encode("utf-8"))
             except:
                 pass
+        elif command == "stop":
+            print("Received 'stop'...exiting")
+            sys.exit(0)
 
         connection.close()
 
@@ -73,6 +76,18 @@ def uniboard_ping():
         print("Uniboard not running")
         sys.exit(1)
 
+def uniboard_stop():
+    client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    try:
+        client.connect(SOCKET_PATH)
+        client.send("stop:".encode("utf-8"))
+
+    except ConnectionRefusedError:
+        print("Uniboard not running")
+        sys.exit(1)
+
+    print("Uniboard daemon stopped")
+
 def main():
     parser = argparse.ArgumentParser(description='A minimalistic clipboard server')
     parser.add_argument('--daemon', action='store_true',
@@ -83,6 +98,8 @@ def main():
                         help='Returns and clears the clipboard value')
     parser.add_argument('--ping', action='store_true',
                         help='Returns pid of currently running daemon')
+    parser.add_argument('--stop', action='store_true',
+                        help='Stops the currently running daemon')
     args = parser.parse_args()
 
     if args.daemon:
@@ -93,6 +110,8 @@ def main():
         uniboard_get()
     elif args.ping:
         uniboard_ping()
+    elif args.stop:
+        uniboard_stop()
 
 if __name__ == "__main__":
     main()
