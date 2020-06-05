@@ -14,7 +14,7 @@ function! uniboard#Yank()
   endif
 
   if !uniboard#IsRunning()
-    let daemon_command = 'nohup '.s:uniboard_command.' daemon&'
+    let daemon_command = 'nohup '.s:uniboard_command.' daemon >/dev/null &'
     call system(daemon_command)
   endif
 
